@@ -17,11 +17,13 @@
 # ------------
 # System Modules - Included with Python
 
+from pathlib import Path
+
 # ------------
 # 3rd Party - From pip
 
 import click
-from rich.console import Console, RenderableType
+from rich.console import Console
 
 console = Console()
 error_console = Console(stderr=True)
@@ -29,7 +31,7 @@ error_console = Console(stderr=True)
 # ------------
 # Custom Modules
 
-from .common import RichCommand
+# from .common import RichCommand
 
 # from .common import file_hash, write_json, read_json
 
@@ -39,19 +41,15 @@ from .common import RichCommand
 # -------------
 
 
-@click.group(cls=RichCommand)
+# @click.group(cls=RichCommand)
+@click.group()
 @click.version_option()
 @click.pass_context
 def main(ctx, *args, **kwargs):
     """
     Find all files recursively subject to `.gitignore` like excludes
 
-    # Usage
-
-    $ finder .
-
     """
-
 
     pass
 
@@ -59,3 +57,21 @@ def main(ctx, *args, **kwargs):
 # Add the child menu options
 # main.add_command(create)
 # main.add_command(clip)
+
+@main.command()
+@click.argument("target", type=click.Path(exists=True))
+@click.pass_context
+def search(*args, **kwargs):
+    """
+    Search for files recursively.
+
+    # Usage
+
+    $ finder search ~/test
+
+    """
+
+    target = kwargs["target"]
+
+    pass
+
