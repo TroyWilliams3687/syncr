@@ -17,26 +17,21 @@
 # ------------
 # System Modules - Included with Python
 
-from pathlib import Path
-
 # ------------
 # 3rd Party - From pip
 
 import click
-from rich.console import Console
+# from rich.console import Console
 
-console = Console()
-error_console = Console(stderr=True)
+# console = Console()
+# error_console = Console(stderr=True)
 
 # ------------
 # Custom Modules
 
 # from .common import RichCommand
 
-# from .common import file_hash, write_json, read_json
-
-# from .create import create
-# from .clip import clip
+from .command_search import search
 
 # -------------
 
@@ -56,22 +51,5 @@ def main(ctx, *args, **kwargs):
 
 # Add the child menu options
 # main.add_command(create)
-# main.add_command(clip)
-
-@main.command()
-@click.argument("target", type=click.Path(exists=True))
-@click.pass_context
-def search(*args, **kwargs):
-    """
-    Search for files recursively.
-
-    # Usage
-
-    $ finder search ~/test
-
-    """
-
-    target = kwargs["target"]
-
-    pass
+main.add_command(search)
 
