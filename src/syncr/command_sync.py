@@ -175,7 +175,8 @@ def sync(*args, **kwargs):
                     # could add date checks and copy if newer
 
                     if destination_file_path.stat().st_mtime > source_file_path.stat().st_mtime:
-                        wargs["verbose"] >= 1:
+
+                        if kwargs["verbose"] >= 1:
                         console.print(
                             f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
                         )
