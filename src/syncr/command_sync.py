@@ -174,18 +174,27 @@ def sync(*args, **kwargs):
                 if destination_file_path.exists():
                     # could add date checks and copy if newer
 
-                    if kwargs["verbose"] >= 1:
+                    if destination_file_path.stat().st_mtime > source_file_path.stat().st_mtime:
+                        wargs["verbose"] >= 1:
                         console.print(
-                            f"[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}"
+                            f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
                         )
 
-                    continue
+                    else:
+
+                        if kwargs["verbose"] >= 1:
+                            console.print(
+                                f"[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}"
+                            )
+
+                        continue
 
                 if source_file_path.is_file():
 
                     if not kwargs["dry_run"]:
 
                         destination_file_path.parent.mkdir(parents=True, exist_ok=True)
+
                         console.print(
                             f"COPYING: {cp.relative_to(source_path).joinpath(f)}"
                         )
