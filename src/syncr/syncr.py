@@ -26,6 +26,7 @@ import click
 import toml
 
 from rich.traceback import install
+
 install(show_locals=True)
 
 # ------------
@@ -37,6 +38,7 @@ from .command_sync import sync
 from .command_search import search
 
 # -------------
+
 
 @click.group()
 @click.version_option()
@@ -73,10 +75,10 @@ def main(*args, **kwargs):
     ctx.ensure_object(dict)
 
     folders = []
-    for cfg in kwargs['settings']:
+    for cfg in kwargs["settings"]:
 
         cfg = toml.loads(cfg.read_text())
-        folders.extend(cfg['folders'])
+        folders.extend(cfg["folders"])
 
     ctx.obj["folders"] = folders
 
@@ -86,4 +88,3 @@ def main(*args, **kwargs):
 # Add the child menu options
 main.add_command(sync)
 main.add_command(search)
-

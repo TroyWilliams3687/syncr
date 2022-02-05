@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-#-*- coding:utf-8 -*-
+# -*- coding:utf-8 -*-
 
 # -----------
 # SPDX-License-Identifier: MIT
@@ -28,6 +28,7 @@ import click
 
 
 from rich.console import Console
+
 console = Console()
 
 # ------------
@@ -46,7 +47,9 @@ def pattern_tester(value, pattern_key, patterns, source_path=None):
     if pattern_key in patterns:
         for pattern in patterns[pattern_key]:
             if fnmatch.fnmatch(value, pattern):
-                console.print(f'[red]{pattern_key.upper()}[/red]: [cyan]{source_path}[/cyan] -> matches [blue]`{pattern}`[/blue]')
+                console.print(
+                    f"[red]{pattern_key.upper()}[/red]: [cyan]{source_path}[/cyan] -> matches [blue]`{pattern}`[/blue]"
+                )
 
 
 @click.group()
@@ -72,13 +75,17 @@ def search(*args, **kwargs):
     "--dir", is_flag=True, help="Display directories that match `exclude-dir-pattern`."
 )
 @click.option(
-    "--dir-path", is_flag=True, help="Display files that match `exclude-dir-path-pattern`."
+    "--dir-path",
+    is_flag=True,
+    help="Display files that match `exclude-dir-path-pattern`.",
 )
 @click.option(
     "--file", is_flag=True, help="Display files that match `exclude-file-pattern`."
 )
 @click.option(
-    "--file-path", is_flag=True, help="Display files that match `exclude-file-path-pattern`."
+    "--file-path",
+    is_flag=True,
+    help="Display files that match `exclude-file-path-pattern`.",
 )
 def excludes(*args, **kwargs):
     """
@@ -99,7 +106,7 @@ def excludes(*args, **kwargs):
 
     ctx = args[0]
 
-    switch_keys = ['file', 'file_path', 'dir']
+    switch_keys = ["file", "file_path", "dir"]
     if not any(kwargs[key] for key in switch_keys):
 
         for switch_key in switch_keys:
@@ -111,20 +118,20 @@ def excludes(*args, **kwargs):
         print_folder_details(folder)
         console.print()
 
-        source_path = Path(folder['source']).expanduser()
-        destination_path = Path(folder['destination']).expanduser()
+        source_path = Path(folder["source"]).expanduser()
+        destination_path = Path(folder["destination"]).expanduser()
 
-        if 'exclude-dir-path-pattern' in folder:
+        if "exclude-dir-path-pattern" in folder:
 
-            folder['exclude-dir-path-pattern'] = [
+            folder["exclude-dir-path-pattern"] = [
                 source_path.joinpath(d).resolve()
-                for d in folder['exclude-dir-path-pattern']
+                for d in folder["exclude-dir-path-pattern"]
             ]
 
-        if 'exclude-file-path-pattern' in folder:
-            folder['exclude-file-path-pattern'] = [
+        if "exclude-file-path-pattern" in folder:
+            folder["exclude-file-path-pattern"] = [
                 source_path.joinpath(f).resolve()
-                for f in folder['exclude-file-path-pattern']
+                for f in folder["exclude-file-path-pattern"]
             ]
 
         for current_path, dirs, files in os.walk(source_path):
@@ -135,28 +142,42 @@ def excludes(*args, **kwargs):
 
             cp = Path(current_path)
 
-            if kwargs['dir_path'] and 'exclude-dir-path-pattern' in folder:
-                for pattern in folder['exclude-dir-path-pattern']:
+            if kwargs["dir_path"] and "exclude-dir-path-pattern" in folder:
+                for pattern in folder["exclude-dir-path-pattern"]:
 
                     if cp == pattern:
-                        console.print(f'[red]EXCLUDE-DIR-PATH-PATTERN[/red]: [cyan]{cp}[/cyan]')
+                        console.print(
+                            f"[red]EXCLUDE-DIR-PATH-PATTERN[/red]: [cyan]{cp}[/cyan]"
+                        )
 
             for d in dirs:
 
-                if kwargs['dir']:
-                    pattern_tester(d, 'exclude-dir-pattern', folder, source_path=cp.joinpath(d).relative_to(source_path))
+                if kwargs["dir"]:
+                    pattern_tester(
+                        d,
+                        "exclude-dir-pattern",
+                        folder,
+                        source_path=cp.joinpath(d).relative_to(source_path),
+                    )
 
             for f in files:
 
                 source_file_path = cp.joinpath(f)
 
-                if kwargs['file_path'] and 'exclude-file-path-pattern' in folder:
-                    for pattern in folder['exclude-file-path-pattern']:
+                if kwargs["file_path"] and "exclude-file-path-pattern" in folder:
+                    for pattern in folder["exclude-file-path-pattern"]:
 
                         if source_file_path == pattern:
-                            console.print(f'[red]EXCLUDE-FILE-PATH-PATTERN[/red]: [cyan]{cp}[/cyan]')
+                            console.print(
+                                f"[red]EXCLUDE-FILE-PATH-PATTERN[/red]: [cyan]{cp}[/cyan]"
+                            )
 
-                if kwargs['file']:
-                    pattern_tester(f, 'exclude-file-pattern', folder, source_path=source_file_path.relative_to(source_path))
+                if kwargs["file"]:
+                    pattern_tester(
+                        f,
+                        "exclude-file-pattern",
+                        folder,
+                        source_path=source_file_path.relative_to(source_path),
+                    )
 
     console.print()
