@@ -51,48 +51,22 @@ from .common import print_folder_details
               count=True,
               help="Display extra information about the process.",
 )
+@click.option(
+    "--dry-run", is_flag=True, help="Display what would be copied, but doesn't actually copy."
+)
 def sync(*args, **kwargs):
     """
     Sync the files in the source folder with the destination folder.
 
     # Usage
 
-    $ syncr --settings=./config/default.toml sync
+    $ syncr --settings=./config/default.toml sync --dry-run --verbose --verbose --verbose
 
+    $ syncr --settings=./config/default.toml sync --dry-run -vvv
 
     """
 
     ctx = args[0]
-
-    # for folder in ctx.obj["folders"]:
-
-    #     console.print()
-    #     print_folder_details(folder)
-    #     console.print()
-
-    #     source_path = Path(folder['source']).expanduser()
-    #     destination_path = Path(folder['destination']).expanduser()
-
-    #     for current_path, dirs, files in os.walk(source_path):
-
-    #         cp = Path(current_path)
-
-    #         # get the dir excludes working
-
-    #         for f in files:
-
-    #             source_file_path = cp.joinpath(f)
-    #             destination_file_path = destination_path.joinpath(cp.relative_to(source_path)).joinpath(f)
-
-    #             if destination_file_path.exists():
-    #                 # could add date checks and copy if newer
-    #                 continue
-
-    #             destination_file_path.parent.mkdir(parents=True, exist_ok=True)
-
-    #             if source_file_path.is_file():
-    #                 console.print(f'COPYING: {cp.relative_to(source_path)/f}')
-    #                 destination_file_path.write_bytes(source_file_path.read_bytes())
 
     for folder in ctx.obj["folders"]:
 
@@ -184,9 +158,16 @@ def sync(*args, **kwargs):
 
                     continue
 
-                destination_file_path.parent.mkdir(parents=True, exist_ok=True)
 
                 if source_file_path.is_file():
-                    console.print(f'COPYING: {cp.relative_to(source_path).joinpath(f)}')
-                    destination_file_path.write_bytes(source_file_path.read_bytes())
+
+                    if not kwargs['dry_run']:
+
+                        destination_file_path.parent.mkdir(parents=True, exist_ok=True)
+                        console.print(f'COPYING: {cp.relative_to(source_path).joinpath(f)}')
+                        destination_file_path.write_bytes(source_file_path.read_bytes())
+
+                    else:
+
+                        console.print(f'COPYING ([cyan]DRY RUN[/cyan]): {cp.relative_to(source_path).joinpath(f)}')
 

@@ -57,6 +57,16 @@ def main(*args, **kwargs):
     """
     Find all files recursively subject to `.gitignore` like excludes
 
+    # Usage
+
+    $ syncr --settings=./config/default.toml sync --dry-run --verbose --verbose --verbose
+
+    $ syncr --settings=./config/default.toml sync --dry-run -vvv
+
+    $ syncr --settings=./config/default.toml search excludes
+
+    $ syncr --settings=./config/default.toml search excludes --files --dir
+
     """
 
     ctx = args[0]
