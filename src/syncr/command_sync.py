@@ -172,9 +172,9 @@ def sync(*args, **kwargs):
                 ).joinpath(f)
 
                 if destination_file_path.exists():
-                    # could add date checks and copy if newer
 
-                    if destination_file_path.stat().st_mtime > source_file_path.stat().st_mtime:
+                    # is the source file newer than the destination file?
+                    if source_file_path.stat().st_mtime > destination_file_path.stat().st_mtime:
 
                         if kwargs["verbose"] >= 1:
                             console.print(
