@@ -177,9 +177,9 @@ def sync(*args, **kwargs):
                     if destination_file_path.stat().st_mtime > source_file_path.stat().st_mtime:
 
                         if kwargs["verbose"] >= 1:
-                        console.print(
-                            f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
-                        )
+                            console.print(
+                                f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
+                            )
 
                     else:
 
