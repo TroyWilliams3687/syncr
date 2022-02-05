@@ -173,6 +173,8 @@ def sync(*args, **kwargs):
 
                 if destination_file_path.exists():
 
+                    # WE could probably do an SHA 256 HASH on the file to really compare things.
+
                     # is the source file newer than the destination file?
                     if source_file_path.stat().st_mtime > destination_file_path.stat().st_mtime:
 
