@@ -105,45 +105,46 @@ def sync(*args, **kwargs):
                 console.print(f"[blue]Current Folder: {cp}[/blue]")
 
             # ------------
-            filtered_dir_list = []
 
-            for d in dirs:
+            if "exclude-dir-pattern" in folder or "exclude-dir-path-pattern" in folder:
 
-                is_valid = [False, False]
+                filtered_dir_list = []
 
-                if "exclude-dir-pattern" in folder:
-                    if not any(
-                        [
-                            fnmatch.fnmatch(d, pattern)
-                            for pattern in folder["exclude-dir-pattern"]
-                        ]
-                    ):
-                        # filtered_dir_list.append(d)
-                        is_valid[0] = True
+                for d in dirs:
 
-                    else:
-                        # This test failed, skip the rest of the tests
-                        if kwargs["verbose"] >= 2:
-                            console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
+                    add_directory = True
 
-                if "exclude-dir-path-pattern" in folder:
+                    if "exclude-dir-pattern" in folder:
+                        if any(
+                            [
+                                fnmatch.fnmatch(d, pattern)
+                                for pattern in folder["exclude-dir-pattern"]
+                            ]
+                        ):
 
-                    if not any(
-                        cp.joinpath(d) == pattern
-                        for pattern in folder["exclude-dir-path-pattern"]
-                    ):
-                        # filtered_dir_list.append(d)
-                        is_valid[1] = True
+                            # This test failed, skip the rest of the tests
+                            if kwargs["verbose"] >= 2:
+                                console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
 
-                    else:
+                            add_directory = False
 
-                        if kwargs["verbose"] >= 2:
-                            console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
+                    if "exclude-dir-path-pattern" in folder:
 
-                if all(is_valid):
-                    filtered_dir_list.append(d)
+                        if any(
+                            cp.joinpath(d) == pattern
+                            for pattern in folder["exclude-dir-path-pattern"]
+                        ):
+                            # filtered_dir_list.append(d)
 
-            dirs[:] = filtered_dir_list
+                            if kwargs["verbose"] >= 2:
+                                console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
+
+                            add_directory = False
+
+                    if add_directory:
+                        filtered_dir_list.append(d)
+
+                dirs[:] = filtered_dir_list
 
             for f in files:
 
