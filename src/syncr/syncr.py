@@ -61,13 +61,13 @@ def main(*args, **kwargs):
 
     # Usage
 
-    $ syncr --settings=./config/default.toml sync --dry-run --verbose --verbose --verbose
+    $ syncr --settings=./sample/default.toml sync --dry-run --verbose --verbose --verbose
 
-    $ syncr --settings=./config/default.toml sync --dry-run -vvv
+    $ syncr --settings=./sample/default.toml sync --dry-run -vvv
 
-    $ syncr --settings=./config/default.toml search excludes
+    $ syncr --settings=./sample/default.toml search excludes
 
-    $ syncr --settings=./config/default.toml search excludes --files --dir
+    $ syncr --settings=./sample/default.toml search excludes --files --dir
 
     """
 

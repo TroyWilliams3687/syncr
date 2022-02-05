@@ -53,19 +53,19 @@ $ .\.venv\Scripts\activate.ps1
 
 
 ```bash
-$ syncr --settings=./config/default.toml sync --dry-run --verbose --verbose --verbose
+$ syncr --settings=./sample/default.toml sync --dry-run --verbose --verbose --verbose
 ```
 
 ```bash
-$ syncr --settings=./config/default.toml sync --dry-run -vvv
+$ syncr --settings=./sample/default.toml sync --dry-run -vvv
 ```
 
 ```bash
-$ syncr --settings=./config/default.toml search excludes
+$ syncr --settings=./sample/default.toml search excludes
 ```
 
 ```bash
-$ syncr --settings=./config/default.toml search excludes --files --dir
+$ syncr --settings=./sample/default.toml search excludes --files --dir
 ```
 
 ## Configuration

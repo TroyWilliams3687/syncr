@@ -142,5 +142,6 @@ $RECYCLE.BIN/
 # ------------
 # Custom
 
+config/
 Makefile.env
 .env

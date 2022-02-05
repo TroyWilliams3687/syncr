@@ -63,9 +63,9 @@ def sync(*args, **kwargs):
 
     # Usage
 
-    $ syncr --settings=./config/default.toml sync --dry-run --verbose --verbose --verbose
+    $ syncr --settings=./sample/default.toml sync --dry-run --verbose --verbose --verbose
 
-    $ syncr --settings=./config/default.toml sync --dry-run -vvv
+    $ syncr --settings=./sample/default.toml sync --dry-run -vvv
 
     """
 

@@ -60,9 +60,9 @@ def search(*args, **kwargs):
 
     # Usage
 
-    $ syncr --settings=./config/default.toml search excludes
+    $ syncr --settings=./sample/default.toml search excludes
 
-    $ syncr --settings=./config/default.toml search excludes --files --dir
+    $ syncr --settings=./sample/default.toml search excludes --files --dir
 
     """
 
@@ -98,9 +98,9 @@ def excludes(*args, **kwargs):
 
     # Usage
 
-    $ syncr --settings=./config/default.toml search excludes
+    $ syncr --settings=./sample/default.toml search excludes
 
-    $ syncr --settings=./config/default.toml search excludes --files --dir
+    $ syncr --settings=./sample/default.toml search excludes --files --dir
 
     """
 
