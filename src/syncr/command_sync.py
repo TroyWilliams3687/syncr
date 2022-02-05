@@ -47,8 +47,9 @@ from .common import print_folder_details
 
 @click.command()
 @click.pass_context
-@click.option(
-    "--verbose", is_flag=True, help="Display extra information about the process."
+@click.option('-v', '--verbose',
+              count=True,
+              help="Display extra information about the process.",
 )
 def sync(*args, **kwargs):
     """
@@ -93,8 +94,6 @@ def sync(*args, **kwargs):
     #                 console.print(f'COPYING: {cp.relative_to(source_path)/f}')
     #                 destination_file_path.write_bytes(source_file_path.read_bytes())
 
-
-
     for folder in ctx.obj["folders"]:
 
         console.print()
@@ -125,26 +124,41 @@ def sync(*args, **kwargs):
 
             cp = Path(current_path)
 
+            if kwargs['verbose'] >= 3:
+                console.print(f'[blue]Current Folder: {cp}[/blue]')
+
             # ------------
             filtered_dir_list = []
 
             for d in dirs:
 
+                is_valid = [False, False]
+
                 if 'exclude-dir-pattern' in folder:
                     if not any([fnmatch.fnmatch(d, pattern) for pattern in folder['exclude-dir-pattern']]):
-                        filtered_dir_list.append(d)
+                        # filtered_dir_list.append(d)
+                        is_valid[0] = True
 
                     else:
                         # This test failed, skip the rest of the tests
-                        continue
+                        if kwargs['verbose'] >= 2:
+                            console.print(f'[red]EXCLUDE-DIR -> {d}[/red]')
 
                 if 'exclude-dir-path-pattern' in folder:
 
                     if not any(cp.joinpath(d) == pattern for pattern in folder['exclude-dir-path-pattern']):
-                        filtered_dir_list.append(d)
+                        # filtered_dir_list.append(d)
+                        is_valid[1] = True
+
+                    else:
+
+                        if kwargs['verbose'] >= 2:
+                            console.print(f'[red]EXCLUDE-DIR -> {d}[/red]')
+
+                if all(is_valid):
+                    filtered_dir_list.append(d)
 
             dirs[:] = filtered_dir_list
-            # ------------
 
 
             for f in files:
@@ -164,71 +178,15 @@ def sync(*args, **kwargs):
 
                 if destination_file_path.exists():
                     # could add date checks and copy if newer
-                    console.print(f'[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}')
+
+                    if kwargs['verbose'] >= 1:
+                        console.print(f'[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}')
+
                     continue
 
                 destination_file_path.parent.mkdir(parents=True, exist_ok=True)
 
                 if source_file_path.is_file():
-                    console.print(f'COPYING: {cp.relative_to(source_path)/f}')
+                    console.print(f'COPYING: {cp.relative_to(source_path).joinpath(f)}')
                     destination_file_path.write_bytes(source_file_path.read_bytes())
 
-
-
-
-    # --------------------
-    # target = Path(kwargs["target"])
-
-    # console.print(f'Searching [red]{target}[/red]...')
-
-
-    # # see https://docs.python.org/3/library/fnmatch.html for details on
-    # # the wildcard files
-
-    # # if a directory is found here that matches raise and exception.
-    # # This is to make sure that we can avoid things like git repos or
-    # # other things that shouldn't be part of a onedrive sync.
-
-    # dir_excludes_fail = [
-    #     '.git',
-    #     '.hg',
-    # ]
-
-    # dir_excludes = [
-    #     # '.*',
-    #     '.git',
-    #     '.venv',
-    #     '.ipynb_checkpoints',
-    # ]
-
-    # file_excludes = [
-    #     # '.gitignore',
-    #     # 'Makefile.*'
-    #     'Makefile.*.sample',
-    #     'Makefile.env',
-    # ]
-
-    # for p, dirs, files in os.walk(target):
-
-    #     for d in dirs:
-    #         if any([fnmatch.fnmatch(d, pattern) for pattern in dir_excludes_fail]):
-    #             raise ValueError(f'Found Exclude-Fail DIR - {Path(p).joinpath(d)}. Parent Path should be excluded.')
-
-    #     # filter out the directories we don't want to search
-    #     filtered_dir_list = []
-
-    #     for d in dirs:
-
-    #         if not any([fnmatch.fnmatch(d, pattern) for pattern in dir_excludes]):
-
-    #             filtered_dir_list.append(d)
-
-    #     dirs[:] = filtered_dir_list
-
-    #     for f in files:
-
-    #         # Filter the files
-    #         if not any([fnmatch.fnmatch(f, pattern) for pattern in file_excludes]):
-
-    #             # We made it this far, process the file.
-    #             console.print(f'{Path(p).joinpath(f)}')
