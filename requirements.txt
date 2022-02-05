@@ -8,8 +8,7 @@
 
 click
 rich
-
-tqdm
+toml
 
 # ------------
 # Custom Repo
