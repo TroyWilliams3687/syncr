@@ -19,6 +19,7 @@
 
 import os
 import fnmatch
+
 from pathlib import Path
 
 # ------------
@@ -29,31 +30,74 @@ import click
 from rich.console import Console
 
 console = Console()
+
 # ------------
 # Custom Modules
 
 from .common import print_folder_details
+
+# -------------
+# Typing
+
+from typing import TypeVar
+
+# https://docs.python.org/3/library/typing.html#typing.TypeVar
+PathLike = TypeVar("PathLike", str, Path)
+
 # -------------
 
 
-# https://gist.github.com/Esperanzq/3ee8a03e845c98bc12546272802cb41b
-# def get_all_files(path, min_size_kb=None):
-#     for root, dirs, files in os.walk(path):
-#         for file_ in files:
-#             path = os.path.abspath(os.path.join(root, file_))
-#             size = (os.path.getsize(path)) // 1024
-#             if size >= min_size_kb:
-#                 yield ("{} - {} kb".format(path, size))
+def any_pattern_matches(item: str, patterns: list = None):
+    """
+    Given the item, does it match any of the patterns using `fnmatch`?
+    """
+
+    return any([fnmatch.fnmatch(item, pattern) for pattern in patterns])
 
 
-# files_lazy_lister = get_all_files("F:\\", min_size_kb=1000)
-# pprint.pprint(list(files_lazy_lister))
-
-def file_search(search_path, verbose=0, rules=None):
+def file_search(search_path: PathLike, verbose: int = 0, rules: dict = None):
     """
     Uses os.walk and iterates through the path recursively following the
     directory exclude patterns. It returns proper pathlib.Path objects
     representing valid files.
+
+    # args
+
+    search_path
+        - A path liek object
+
+    # kwargs
+
+    verbose
+        - Display status messages based on the verbosity level set.
+        - Default = 0
+
+    rules
+        - A dictionary containing the fnmatch patterns to filter the
+          files returns and the folders searched.
+        - expected keys:
+            - exclude-dir-pattern
+                - A list of fnmatch patterns to match against
+                - This can apply to any folder within the path
+
+            - exclude-dir-path-pattern
+                - A list of relative paths from the search path
+                - the items is concatenated with the search path and the
+                  directories are compared
+
+            - exclude-file-pattern
+                - A list of fnmatch patterns to match against the files
+                - Apply to any file name within any folder
+
+            - exclude-file-path-pattern
+                - a list of relative file paths that are concatenated
+                  with the current folder and compared against the
+                  file
+
+    # Return
+
+    Every file that isn't filtered is returned, one at a time.
+
     """
 
     for current_path, dirs, files in os.walk(search_path):
@@ -76,28 +120,23 @@ def file_search(search_path, verbose=0, rules=None):
                 add_directory = True
 
                 if "exclude-dir-pattern" in rules:
-                    if any(
-                        [
-                            fnmatch.fnmatch(d, pattern)
-                            for pattern in rules["exclude-dir-pattern"]
-                        ]
-                    ):
 
-                        # This test failed, skip the rest of the tests
+                    if any_pattern_matches(d, rules["exclude-dir-pattern"]):
+
                         if verbose >= 2:
-                            console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
+                            console.print(f"[red]EXCLUDE-DIR[/red] -> [cyan]{d}[/cyan]")
 
                         add_directory = False
 
                 if "exclude-dir-path-pattern" in rules:
 
-                    if any(
-                        cp.joinpath(d) == pattern
-                        for pattern in rules["exclude-dir-path-pattern"]
+                    if any_pattern_matches(
+                        cp.joinpath(d), rules["exclude-dir-path-pattern"]
                     ):
-
                         if verbose >= 2:
-                            console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
+                            console.print(
+                                f"[red]EXCLUDE-DIR-FULL[/red] -> [cyan]{d}[/cyan]"
+                            )
 
                         add_directory = False
 
@@ -111,27 +150,28 @@ def file_search(search_path, verbose=0, rules=None):
             fp = cp.joinpath(f)
 
             if "exclude-file-pattern" in rules:
-                if any(
-                    [
-                        fnmatch.fnmatch(f, pattern)
-                        for pattern in rules["exclude-file-pattern"]
-                    ]
-                ):
+
+                if any_pattern_matches(f, rules["exclude-file-pattern"]):
+
+                    if verbose >= 2:
+                        console.print(f"[red]EXCLUDE-FILE[/red] -> [cyan]{f}[/cyan]")
+
                     continue
 
             if "exclude-file-path-pattern" in rules:
 
-                if any(
-                    fp == pattern
-                    for pattern in rules["exclude-file-path-pattern"]
+                if any_pattern_matches(
+                    cp.joinpath(f), rules["exclude-file-path-pattern"]
                 ):
+
+                    if verbose >= 2:
+                        console.print(
+                            f"[red]EXCLUDE-FILE-FULL[/red] -> [cyan]{f}[/cyan]"
+                        )
+
                     continue
 
             yield fp
-
-
-
-
 
 
 @click.command()
@@ -183,19 +223,23 @@ def sync(*args, **kwargs):
                 for f in folder["exclude-file-path-pattern"]
             ]
 
-        for source_file_path in file_search(source_path, verbose=kwargs['verbose'], rules=folder):
+        for source_file_path in file_search(
+            source_path, verbose=kwargs["verbose"], rules=folder
+        ):
 
             destination_file_path = destination_path.joinpath(
                 source_file_path.relative_to(source_path)
             )
-
 
             if destination_file_path.exists():
 
                 # WE could probably do an SHA 256 HASH on the file to really compare things.
 
                 # is the source file newer than the destination file?
-                if source_file_path.stat().st_mtime > destination_file_path.stat().st_mtime:
+                if (
+                    source_file_path.stat().st_mtime
+                    > destination_file_path.stat().st_mtime
+                ):
 
                     console.print(
                         f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
@@ -226,120 +270,3 @@ def sync(*args, **kwargs):
                     console.print(
                         f"COPYING ([cyan]DRY RUN[/cyan]): {source_file_path.relative_to(source_path)}"
                     )
-
-
-        # -----------
-        # for current_path, dirs, files in os.walk(source_path):
-
-        #     # current_path - the current path os.walk is on
-        #     # dirs - the folders in the current path
-        #     # files - the files in the current path
-
-        #     cp = Path(current_path)
-
-        #     if kwargs["verbose"] >= 3:
-        #         console.print(f"[blue]Current Folder: {cp}[/blue]")
-
-        #     # ------------
-
-        #     if "exclude-dir-pattern" in folder or "exclude-dir-path-pattern" in folder:
-
-        #         filtered_dir_list = []
-
-        #         for d in dirs:
-
-        #             add_directory = True
-
-        #             if "exclude-dir-pattern" in folder:
-        #                 if any(
-        #                     [
-        #                         fnmatch.fnmatch(d, pattern)
-        #                         for pattern in folder["exclude-dir-pattern"]
-        #                     ]
-        #                 ):
-
-        #                     # This test failed, skip the rest of the tests
-        #                     if kwargs["verbose"] >= 2:
-        #                         console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
-
-        #                     add_directory = False
-
-        #             if "exclude-dir-path-pattern" in folder:
-
-        #                 if any(
-        #                     cp.joinpath(d) == pattern
-        #                     for pattern in folder["exclude-dir-path-pattern"]
-        #                 ):
-        #                     # filtered_dir_list.append(d)
-
-        #                     if kwargs["verbose"] >= 2:
-        #                         console.print(f"[red]EXCLUDE-DIR -> {d}[/red]")
-
-        #                     add_directory = False
-
-        #             if add_directory:
-        #                 filtered_dir_list.append(d)
-
-        #         dirs[:] = filtered_dir_list
-
-        #     for f in files:
-
-        #         source_file_path = cp.joinpath(f)
-
-        #         if "exclude-file-pattern" in folder:
-        #             if any(
-        #                 [
-        #                     fnmatch.fnmatch(f, pattern)
-        #                     for pattern in folder["exclude-file-pattern"]
-        #                 ]
-        #             ):
-        #                 continue
-
-        #         if "exclude-file-path-pattern" in folder:
-
-        #             if any(
-        #                 source_file_path == pattern
-        #                 for pattern in folder["exclude-file-path-pattern"]
-        #             ):
-        #                 continue
-
-        #         destination_file_path = destination_path.joinpath(
-        #             cp.relative_to(source_path)
-        #         ).joinpath(f)
-
-        #         if destination_file_path.exists():
-
-        #             # WE could probably do an SHA 256 HASH on the file to really compare things.
-
-        #             # is the source file newer than the destination file?
-        #             if source_file_path.stat().st_mtime > destination_file_path.stat().st_mtime:
-
-        #                 console.print(
-        #                     f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
-        #                 )
-
-        #             else:
-
-        #                 if kwargs["verbose"] >= 1:
-        #                     console.print(
-        #                         f"[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}"
-        #                     )
-
-        #                 continue
-
-        #         if source_file_path.is_file():
-
-        #             if not kwargs["dry_run"]:
-
-        #                 destination_file_path.parent.mkdir(parents=True, exist_ok=True)
-
-        #                 console.print(
-        #                     f"COPYING: {cp.relative_to(source_path).joinpath(f)}"
-        #                 )
-        #                 destination_file_path.write_bytes(source_file_path.read_bytes())
-
-        #             else:
-
-        #                 console.print(
-        #                     f"COPYING ([cyan]DRY RUN[/cyan]): {cp.relative_to(source_path).joinpath(f)}"
-        #                 )

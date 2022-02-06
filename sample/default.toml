@@ -75,27 +75,3 @@ exclude-file-pattern = [
 exclude-file-path-pattern = [
     "src/documentos/plugins/toc_plugins.py",
 ]
-
-
-# [[folders]]
-# src = "C:/documents/Aegis/data"
-# dest = "C:/Users/troy.williams/IRING INC/iRing-Rocscan - Documents/data"
-
-# [[folders]]
-# src = "C:/documents/iRing Aegis/Projects"
-# dest = "C:/Users/troy.williams/IRING INC/iRing-Rocscan - Documents/aegis projects"
-
-# [[folders]]
-# src = "C:/documents/projects/rocscan/CJP"
-# dest = "C:/Users/troy.williams/IRING INC/iRing-Rocscan - Documents/Rocscan"
-
-
-# ----------
-# Private OneDrive Share - folders that are sync'd with my one drive
-
-# Choose the folders carefully to sync with my personal one drive instance.
-
-# [[folders]]
-# src = "C:/documents/"
-# dest = "C:/Users/troy.williams/OneDrive - IRING INC"
-
