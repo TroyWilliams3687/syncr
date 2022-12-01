@@ -258,12 +258,23 @@ def sync(*args, **kwargs):
 
                 if not kwargs["dry_run"]:
 
-                    destination_file_path.parent.mkdir(parents=True, exist_ok=True)
+                    try:
+
+                        destination_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+                    except FileNotFoundError as fe:
+                        console.print(f'[red]{fe}[/red]')
 
                     console.print(
                         f"COPYING: {source_file_path.relative_to(source_path)}"
                     )
-                    destination_file_path.write_bytes(source_file_path.read_bytes())
+
+                    try:
+                        destination_file_path.write_bytes(source_file_path.read_bytes())
+
+                    except FileNotFoundError as fe:
+                        console.print(f'[red]{fe}[/red]')
+
 
                 else:
 
