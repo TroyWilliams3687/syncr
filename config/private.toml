@@ -1,0 +1,94 @@
+# -------------
+# 2022-02-05
+
+# Basic paths for searching
+
+# This will allow for multiple folders to by searched/synced. It will allow the
+# user to specify different exclude patterns
+
+# NOTE:
+# - Use `Literal Strings` for paths so windows paths don't need to be escaped
+#   and can simply be pasted into the configuration file.
+# - Use forward slashes on all systems to make it easier to work cross-platform
+
+# The pattern matching follows [fnmatch] (https://docs.python.org/3/library/fnmatch.html)
+# and can use:
+
+# Pattern   Meaning
+# *         matches everything
+# ?         matches any single character
+# [seq]     matches any character in seq
+# [!seq]    matches any character not in seq
+
+# -------------
+
+
+[[folders]]
+source = "C:/documents/"
+destination = "C:/Users/troy.williams/OneDrive - IRING INC"
+
+exclude-dir-pattern = [
+    ".git",
+    ".hg",
+    ".venv",
+    ".pytest_cache",
+    "__pycache__",
+    "*.egg-info",
+    ".ipynb_checkpoints",
+    ".stversions",
+]
+
+exclude-file-pattern = [
+    "*.sync-conflict*",
+   ".stglobalignore",
+   ".stignore",
+   "desktop.ini",
+   "~*",
+   "*.tmp",
+]
+
+# exclude-dir-path-pattern - These patterns will be joined with the source path.
+# It will filter out specific folders within the source tree. The pattern
+# should be relative to the source path.
+# NOTE: This is optional and doesn't need to be included.
+# NOTE: This doesn't support wildcards. It is supposed to be an exact match filter
+exclude-dir-path-pattern = [
+    "Aegis/code/projects/AEGIS-git",
+    "home",
+    'keys',
+    "signature",
+]
+
+
+# # exclude-file-path-pattern - These patterns will be joined with the source
+# # path. It will filter out specific files within the tree. The pattern should
+# # be relative to the source path.
+# # NOTE: This is optional and doesn't need to be included.
+# exclude-file-path-pattern = [
+#     "src/documentos/plugins/toc_plugins.py",
+# ]
+
+
+[[folders]]
+source = "C:/pictures/"
+destination = "C:/Users/troy.williams/OneDrive - IRING INC/pictures"
+
+exclude-dir-pattern = [
+    ".git",
+    ".hg",
+    ".venv",
+    ".pytest_cache",
+    "__pycache__",
+    "*.egg-info",
+    ".ipynb_checkpoints",
+    ".stversions",
+]
+
+exclude-file-pattern = [
+    "*.sync-conflict*",
+   ".stglobalignore",
+   ".stignore",
+   "desktop.ini",
+   "~*",
+   "*.tmp",
+]

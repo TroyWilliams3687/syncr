@@ -17,7 +17,7 @@ $ git clone git@github.com:TroyWilliams3687/syncr.git
 You can use the `Makefile` to create the virtual environment and install all requirements automatically:
 
 ```bash
-$ make venv
+scons
 ```
 
 Otherwise you will have to create the virtual environment manually and install the dependencies traditionally after activating the environment.

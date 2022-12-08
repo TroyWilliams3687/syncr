@@ -1,0 +1,92 @@
+# -------------
+# 2022-02-05
+
+# Basic paths for searching
+
+# This will allow for multiple folders to by searched/synced. It will allow the
+# user to specify different exclude patterns
+
+# NOTE:
+# - Use `Literal Strings` for paths so windows paths don't need to be escaped
+#   and can simply be pasted into the configuration file.
+# - Use forward slashes on all systems to make it easier to work cross-platform
+
+# The pattern matching follows [fnmatch] (https://docs.python.org/3/library/fnmatch.html)
+# and can use:
+
+# Pattern   Meaning
+# *         matches everything
+# ?         matches any single character
+# [seq]     matches any character in seq
+# [!seq]    matches any character not in seq
+
+# -------------
+
+
+# [[folders]]
+
+# # The source path we want to copy files recursively from
+# source = '~/repositories/projects/documentos'
+
+# # The destination where we want to copy the files to, matching the folder
+# # structure
+# destination = '~/tmp/find_files_testing'
+
+# # exclude-dir-pattern - Directory patterns we want to exclude from the
+# # destination folder. It will match any directory in any of the sub-directory
+# # levels. If a directory name matches one of the patterns it is excluded.
+# # NOTE: This is optional and doesn't need to be included.
+# exclude-dir-pattern = [
+#     ".git",
+#     ".venv",
+#     ".pytest_cache",
+#     "__pycache__",
+#     "*.egg-info",
+#     ".ipynb_checkpoints",
+
+# ]
+
+# # exclude-dir-path-pattern - These patterns will be joined with the source path.
+# # It will filter out specific folders within the source tree. The pattern
+# # should be relative to the source path.
+# # NOTE: This is optional and doesn't need to be included.
+# # NOTE: This doesn't support wildcards. It is supposed to be an exact match filter
+# exclude-dir-path-pattern = [
+#     "samples/configuration",
+#     "en/documents",
+# ]
+
+# # exclude-file-pattern - File matching patterns we want to exclude from the
+# # destination folder. Any file name that matches a pattern will be excluded.
+# # The patterns are applied to every file that is discovered.
+# # NOTE: This is optional and doesn't need to be included.
+# exclude-file-pattern = [
+#     ".gitignore",
+# #    "Makefile.*",
+#     "Makefile.*.sample",
+# #    "Makefile.env",
+# ]
+
+
+# # exclude-file-path-pattern - These patterns will be joined with the source
+# # path. It will filter out specific files within the tree. The pattern should
+# # be relative to the source path.
+# # NOTE: This is optional and doesn't need to be included.
+# exclude-file-path-pattern = [
+#     "src/documentos/plugins/toc_plugins.py",
+# ]
+
+
+[[folders]]
+source = "C:/documents/Aegis/data"
+destination = "C:/Users/troy.williams/IRING INC/iRing-Engineering - Documents/data"
+
+
+[[folders]]
+source = "C:/documents/iRing Aegis/Projects"
+destination = "C:/Users/troy.williams/IRING INC/iRing-Engineering - Documents/aegis projects"
+
+
+[[folders]]
+source = "C:/documents/projects/rocscan/cjp_dropbox"
+destination = "C:/Users/troy.williams/IRING INC/iRing-Engineering - Documents/cjp - dropbox"
