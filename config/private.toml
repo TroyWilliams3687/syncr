@@ -54,6 +54,8 @@ exclude-file-pattern = [
 # NOTE: This doesn't support wildcards. It is supposed to be an exact match filter
 exclude-dir-path-pattern = [
     "Aegis/code/projects/AEGIS-git",
+    "companies/Nexco",
+    "companies/One Red Maple",
     "home",
     'keys',
     "signature",
