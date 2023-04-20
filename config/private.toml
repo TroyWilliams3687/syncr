@@ -25,7 +25,7 @@
 
 [[folders]]
 source = "C:/documents/"
-destination = "C:/Users/troy.williams/OneDrive - IRING INC"
+destination = "C:/Users/troy.williams/OneDrive - Vela Industries Group"
 
 exclude-dir-pattern = [
     ".git",
@@ -73,7 +73,7 @@ exclude-dir-path-pattern = [
 
 [[folders]]
 source = "C:/pictures/"
-destination = "C:/Users/troy.williams/OneDrive - IRING INC/pictures"
+destination = "C:/Users/troy.williams/OneDrive - Vela Industries Group/pictures"
 
 exclude-dir-pattern = [
     ".git",

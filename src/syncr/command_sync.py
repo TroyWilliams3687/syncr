@@ -231,28 +231,34 @@ def sync(*args, **kwargs):
                 source_file_path.relative_to(source_path)
             )
 
-            if destination_file_path.exists():
+            try:
 
-                # WE could probably do an SHA 256 HASH on the file to really compare things.
+                if destination_file_path.exists():
 
-                # is the source file newer than the destination file?
-                if (
-                    source_file_path.stat().st_mtime
-                    > destination_file_path.stat().st_mtime
-                ):
+                    # WE could probably do an SHA 256 HASH on the file to really compare things.
 
-                    console.print(
-                        f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
-                    )
+                    # is the source file newer than the destination file?
+                    if (
+                        source_file_path.stat().st_mtime
+                        > destination_file_path.stat().st_mtime
+                    ):
 
-                else:
-
-                    if kwargs["verbose"] >= 1:
                         console.print(
-                            f"[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}"
+                            f"[green]EXISTS - OLDER[/green] -> {source_file_path.relative_to(source_path)}"
                         )
 
-                    continue
+                    else:
+
+                        if kwargs["verbose"] >= 1:
+                            console.print(
+                                f"[red]EXISTS[/red] -> {source_file_path.relative_to(source_path)}"
+                            )
+
+                        continue
+
+            except OSError as fe:
+                console.print(f'[red]{fe}[/red]')
+
 
             if source_file_path.is_file():
 
@@ -262,7 +268,7 @@ def sync(*args, **kwargs):
 
                         destination_file_path.parent.mkdir(parents=True, exist_ok=True)
 
-                    except FileNotFoundError as fe:
+                    except (FileNotFoundError, OSError) as fe:
                         console.print(f'[red]{fe}[/red]')
 
                     console.print(
@@ -272,7 +278,7 @@ def sync(*args, **kwargs):
                     try:
                         destination_file_path.write_bytes(source_file_path.read_bytes())
 
-                    except FileNotFoundError as fe:
+                    except (FileNotFoundError, OSError) as fe:
                         console.print(f'[red]{fe}[/red]')
 
 
