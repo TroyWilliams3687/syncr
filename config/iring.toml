@@ -79,14 +79,14 @@
 
 [[folders]]
 source = "C:/documents/Aegis/data"
-destination = "C:/Users/troy.williams/IRING INC/iRing-Engineering - Documents/data"
+destination = "C:/data/Vela Industries Group/iRing-Engineering - Documents/data"
 
 
 [[folders]]
 source = "C:/documents/iRing Aegis/Projects"
-destination = "C:/Users/troy.williams/IRING INC/iRing-Engineering - Documents/aegis projects"
+destination = "C:/data/Vela Industries Group/iRing-Engineering - Documents/aegis projects"
 
 
 [[folders]]
 source = "C:/documents/projects/rocscan/cjp_dropbox"
-destination = "C:/Users/troy.williams/IRING INC/iRing-Engineering - Documents/cjp - dropbox"
+destination = "C:/data/Vela Industries Group/iRing-Engineering - Documents/cjp - dropbox"
