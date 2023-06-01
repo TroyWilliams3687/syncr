@@ -54,11 +54,23 @@ exclude-file-pattern = [
 # NOTE: This doesn't support wildcards. It is supposed to be an exact match filter
 exclude-dir-path-pattern = [
     "Aegis/code/projects/AEGIS-git",
-    "companies/Nexco",
-    "companies/One Red Maple",
     "home",
     'keys',
+    "archive",
+    "Camtasia",
+    "certifications",
+    "companies/Nexco",
+    "companies/One Red Maple",
+    "consulting",
+    "courses",
+    "Custom Office Templates",
+    "email",
+    "everything",
+    "MREL",
+    "papers",
+    "receipts",
     "signature",
+    "Zoom",
 ]
 
 
@@ -71,26 +83,26 @@ exclude-dir-path-pattern = [
 # ]
 
 
-[[folders]]
-source = "C:/pictures/"
-destination = "C:/Users/troy.williams/OneDrive - Vela Industries Group/pictures"
+# [[folders]]
+# source = "C:/pictures/"
+# destination = "C:/data/OneDrive - Vela Industries Group/pictures"
 
-exclude-dir-pattern = [
-    ".git",
-    ".hg",
-    ".venv",
-    ".pytest_cache",
-    "__pycache__",
-    "*.egg-info",
-    ".ipynb_checkpoints",
-    ".stversions",
-]
+# exclude-dir-pattern = [
+#     ".git",
+#     ".hg",
+#     ".venv",
+#     ".pytest_cache",
+#     "__pycache__",
+#     "*.egg-info",
+#     ".ipynb_checkpoints",
+#     ".stversions",
+# ]
 
-exclude-file-pattern = [
-    "*.sync-conflict*",
-   ".stglobalignore",
-   ".stignore",
-   "desktop.ini",
-   "~*",
-   "*.tmp",
-]
+# exclude-file-pattern = [
+#     "*.sync-conflict*",
+#    ".stglobalignore",
+#    ".stignore",
+#    "desktop.ini",
+#    "~*",
+#    "*.tmp",
+# ]
