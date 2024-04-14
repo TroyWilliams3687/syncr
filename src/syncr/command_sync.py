@@ -27,9 +27,7 @@ from pathlib import Path
 
 import click
 
-from rich.console import Console
-
-console = Console()
+from rich.console import Console; console = Console()
 
 # ------------
 # Custom Modules

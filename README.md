@@ -1,73 +1,115 @@
-# Syncr
+# syncr
 
-A utility to copy files from one folder to another and maintain the relative folder structure. The idea is to copy files to a sync folder maintained by Onedrive or Dropbox while that folder is maintained by something else. 
+## Introduction
 
-## Installation
+A utility to copy files from one folder to another and maintain the relative folder structure. The idea is to copy files to a sync folder maintained by Onedrive or Dropbox while that folder is maintained by something else.
 
-### Git Repo
+## QuickStart
 
-Clone the git repo:
+1. [Install Rye](#installation-and-configuration)
+2. [Installation and Configuration](#rye-sync)
+3. [Activate](#activate-virtual-environment---traditional-approach)
+4. [expgen](#experiment-generator-usage)
+    - [expgen config](#config)
+    - [expgen create](#create)
+    - [expgen predict](#predict)
+5. [Build Docs](#build-docs)
+6. [Build Installer](#build-installer)
 
-```bash
-$ git clone git@github.com:TroyWilliams3687/syncr.git
-```
 
-### Create the Virtual Environment
+## Installation and Configuration
 
-You can use the `Makefile` to create the virtual environment and install all requirements automatically:
+To get this project up and running from the repository, it uses [Rye](https://rye-up.com) as the build/dependency manager. There are [instructions](https://rye-up.com/guide/installation/) for installing Rye on many different systems. This set of instructions are for Linux and windows. See the installation guide for other operating systems.
 
-```bash
-scons
-```
+You have to download Rye to your system. Follow the [installation guide](https://rye-up.com/guide/installation/) for your operating system.
 
-Otherwise you will have to create the virtual environment manually and install the dependencies traditionally after activating the environment.
+Why Rye? That is a good question. Python is a great language but it is tough to create a reproducible environment. You have to have the correct version of Python installed or available. You have to have the correct tools configured. If you are on Linux/BSD you have to make sure that your work doesn't mess up your system Python installation. It is fairly trivial if you are experienced, but annoying enough to have to do it over-and-over again. If you are new, it can be extremely difficult.
 
-## Activating the Virtual Environment
+Rye takes care of handling the different versions of Python and managing the tools you need for a reproducible environment, particularly if you are doing cross-platform work.
 
 ### Linux
 
-On Linux, for most causes you can simple using the `Makefile` to build the system. If you need to activate the virtual environment:
+For Linux, you can use the following:
 
 ```bash
-$ make shell
+curl -sSf https://rye-up.com/get | bash
 ```
 
-Or manually:
+There are also good guides to configuring Rye for your shell. Here is what I had to do to get it working in ZSH on my system.
 
+Edit **.zshrc**:
 
 ```bash
-$ . .venv/bin/activate
+vi ~/.zshrc
+```
+
+Add the following:
+
+```bash
+source "$HOME/.rye/env"
+```
+
+Restart the terminal and type **rye**. To add [shell completion](https://rye-up.com/guide/installation/#shell-completion), you can:
+
+```bash
+mkdir $ZSH_CUSTOM/plugins/rye
+rye self completion -s zsh > $ZSH_CUSTOM/plugins/rye/_rye
 ```
 
 ### Windows
 
-Activate the virtual environment that you want to install it too.
+For windows, download the [installer](https://github.com/mitsuhiko/rye/releases/latest/download/rye-x86_64-windows.exe) listed in the installation guide link.
 
-On Windows, using powershell:
+## Basic Rye Usage
+
+### Rye Update
+
+[Update rye](https://rye-up.com/guide/installation/#updating-rye):
 
 ```bash
-$ .\.venv\Scripts\activate.ps1
+rye self update
 ```
+
+### Rye Sync
+
+Once you have rye properly installed, you can run [**rye sync**](https://rye-up.com/guide/commands/sync/), to build (or update) the virtual environment.
+
+Create/Update Virtual Environment
+
+```bash
+rye sync
+```
+
+> NOTE: This needs to be run from within the repository. If you add new dependencies or modify the **pyproject.toml** you should run **rye sync**.
+
+### Activate Virtual Environment - Traditional Approach
+
+You can add the following alias to your **.zshrc** or **.bashrc**, or you can run the activate script directly:
+
+```bash
+# Python Virtual Environment Alias
+alias activate="source .venv/bin/activate"
+```
+
+>NOTE: On Windows, there is an **activate.ps1**, a PowerShell script that you can execute.
 
 ## Usage
 
-
 ```bash
-$ syncr --settings=./sample/default.toml sync --dry-run --verbose --verbose --verbose
+syncr --settings=./sample/default.toml sync --dry-run --verbose --verbose --verbose
 ```
 
 ```bash
-$ syncr --settings=./sample/default.toml sync --dry-run -vvv
+syncr --settings=./sample/default.toml sync --dry-run -vvv
 ```
 
 ```bash
-$ syncr --settings=./sample/default.toml search excludes
+syncr --settings=./sample/default.toml search excludes
 ```
 
 ```bash
-$ syncr --settings=./sample/default.toml search excludes --files --dir
+syncr --settings=./sample/default.toml search excludes --files --dir
 ```
-
 ## Configuration
 
 You can use as many different configuration files as you like. They are [TOML](https://toml.io/en/) formatted and easy to use. The look like:
@@ -214,5 +256,5 @@ exclude-file-path-pattern = [
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
+Please refer to [LICENSE.md](LICENSE.md).
 

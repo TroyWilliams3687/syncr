@@ -23,11 +23,9 @@ from pathlib import Path
 # 3rd Party - From pip
 
 import click
-import toml
+import tomllib as toml
 
-from rich.traceback import install
-
-install(show_locals=True)
+from rich.traceback import install; install(show_locals=True)
 
 # ------------
 # Custom Modules
